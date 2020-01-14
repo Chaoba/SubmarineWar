@@ -1,58 +1,71 @@
 #include "baseObject.cpp"
-class Decoration : BaseObject
+class Decoration : public BaseObject
 {
 public:
-    Decoration(vector<vector<int>> &board, Point leftTop, int width, int height) : BaseObject(board, leftTop, width, height)
+    Decoration(int width, int height) : BaseObject(width, height)
     {
+    }
+    ~Decoration() {}
+
+    bool addToBoard(vector<vector<int> > &board, Point position)
+    {
+        BaseObject::addToBoard(board, position);
         for (int i = leftTop.x; i < width; i++)
         {
             for (int j = leftTop.y; j < height; j++)
             {
-                if (board[i][j] == 0)
+                if (board[i][j] == DECORATION)
                 {
-                    board[i][j] = 1;
+                    //Confilct with other decoration
+                    cout<<"board i:"<<i<<" j:"<<j<<" is ocupied by DECORATION"<<endl;
+                    valid = false;
+                    return false;
+                }
+                else
+                {
+                    board[i][j] = DECORATION;
                 }
             }
         }
+        return true;
     }
-    ~Decoration() noexcept {}
 };
 
-class SmallMine : Decoration
+class SmallMine : public Decoration
 {
 public:
-    SmallMine(vector<vector<int>> &board, Point leftTop) : Decoration(board, leftTop, 2, 2)
+    SmallMine() : Decoration(2, 2)
     {
     }
-    ~SmallMine() noexcept {}
+    ~SmallMine() {}
 };
 
-class MiddleMine : Decoration
+class MiddleMine : public Decoration
 {
 public:
-    MiddleMine(vector<vector<int>> &board, Point leftTop) : Decoration(board, leftTop, 2, 3)
+    MiddleMine() : Decoration(2, 3)
     {
     }
-    MiddleMine(vector<vector<int>> &board, Point leftTop, bool horizental) : Decoration(board, leftTop, 3, 2)
+    MiddleMine(bool horizental) : Decoration(3, 2)
     {
     }
-    ~MiddleMine() noexcept {}
+    ~MiddleMine() {}
 };
 
-class BigMine : Decoration
+class BigMine : public Decoration
 {
 public:
-    BigMine(vector<vector<int>> &board, Point leftTop) : Decoration(board, leftTop, 3, 3)
+    BigMine() : Decoration(3, 3)
     {
     }
-    ~BigMine() noexcept {}
+    ~BigMine() {}
 };
 
-class Propeller : Decoration
+class Propeller : public Decoration
 {
 public:
-    Propeller(vector<vector<int>> &board, Point leftTop) : Decoration(board, leftTop, 2, 2)
+    Propeller() : Decoration(2, 2)
     {
     }
-    ~Propeller() noexcept {}
+    ~Propeller() {}
 };
