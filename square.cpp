@@ -47,13 +47,13 @@ enum CHESS_TYPE
     MIDDLE_MINE = 8,
     BIG_MINE = 9
 };
-class BaseObject
+class Square
 {
 public:
     int width, height;
     Point leftTop, parent;
     bool valid = false;
-    BaseObject(int w, int h) : leftTop(Point(-1, -1)), parent(Point(-1, -1)), width(w), height(h)
+    Square(int w, int h) : leftTop(Point(-1, -1)), parent(Point(-1, -1)), width(w), height(h)
     {
     }
     virtual bool addToBoard(vector<vector<int>> &board, Point position, Point parentPosition)
@@ -65,5 +65,5 @@ public:
     }
     virtual bool removeFromBoard(vector<vector<int>> &board) = 0;
 
-    virtual ~BaseObject() {}
+    virtual ~Square() {}
 };

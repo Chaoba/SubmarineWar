@@ -1,10 +1,10 @@
 #include "decoration.cpp"
 
-class Chess : public BaseObject
+class Chess : public Square
 {
 public:
     vector<pair<Decoration *, Point>> decorations;
-    Chess() : BaseObject(5, 5)
+    Chess() : Square(5, 5)
     {
     }
     virtual CHESS_TYPE chessType() = 0;
@@ -109,7 +109,7 @@ public:
     }
     virtual bool addToBoard(vector<vector<int>> &board, Point position, Point parentPosition) override
     {
-        BaseObject::addToBoard(board, position, parentPosition);
+        Square::addToBoard(board, position, parentPosition);
         // cout << chessType() << "chess add to board" << endl;
         if (position.x < 0 || position.x > 19 || position.y < 0 || position.y > 19)
         {

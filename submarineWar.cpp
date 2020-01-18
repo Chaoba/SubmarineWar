@@ -1,14 +1,15 @@
 #include "chess.cpp"
-#define showLog 0
-#define findShortest 1
+
 class SubmarineWar
 {
 private:
     pair<int, int> moveDeriction[4] = {{0, -1}, {-1, 0}, {1, 0}, {0, 1}};
-    int minLen = 110;
+    int maxStep;
+    int showLog;
+    int findShortest;
 
 public:
-    SubmarineWar() = default;
+    SubmarineWar(int _maxStep, int _showLog, int _findShortest) : maxStep(_maxStep), showLog(_showLog), findShortest(_findShortest) {}
     ~SubmarineWar() = default;
     void printBoard(vector<vector<int>> &board)
     {
@@ -78,7 +79,7 @@ private:
     bool dfsFind(vector<vector<Chess *>> &chesses, vector<vector<int>> &board, vector<int> &path, vector<int> &minPath, int x, int y)
     {
 
-        if (path.size() > minLen)
+        if (path.size() > maxStep)
         {
             return false;
         }
@@ -130,13 +131,14 @@ private:
                     if (chesses[x][y]->canMove(board, DOWN))
                     {
                         path.push_back(DOWN);
-                        if (minLen > path.size())
+                        if (maxStep > path.size())
                         {
-                            if(showLog){
-                                cout<<"find a path, size:"<<path.size()<<endl;
+                            if (showLog)
+                            {
+                                cout << "find a path, size:" << path.size() << endl;
                             }
                             minPath = path;
-                            minLen = minPath.size();
+                            maxStep = minPath.size();
                             if (!findShortest)
                             {
                                 return true;

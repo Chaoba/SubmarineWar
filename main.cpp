@@ -5,11 +5,15 @@
 #include <iostream>
 using namespace std;
 
-void createQuestin(string s)
+void createQuestin(string s, int maxStep, int showLog, int findShortest)
 {
     if (s.size() == 0)
         return;
-    int index = 0, x = 0, y = 0;
+    int index = s.find_first_of('.') + 1, x = 0, y = 0;
+    if(index == -1){
+        cout<<"Question format error."<<endl;
+        return;
+    }
     vector<vector<Chess *>> chesses(3, vector<Chess *>(3));
     vector<vector<int>> board(19, vector<int>(19, 0));
 
@@ -73,7 +77,7 @@ void createQuestin(string s)
         {
             // cout << chesses[i][j]->chessType() << endl;
             // printBoard(board);
-            if (chesses[i][j] && !chesses[i][j]->addToBoard(board, {2 + i * 5, 2 + j * 5},{0,0}))
+            if (chesses[i][j] && !chesses[i][j]->addToBoard(board, {2 + i * 5, 2 + j * 5}, {0, 0}))
             {
                 cout << "Add chess faild:" << i << "  " << j << endl;
                 return;
@@ -81,14 +85,14 @@ void createQuestin(string s)
         }
     }
     // cout << "Add chesses succeed." << endl;
-    vector<int> result = SubmarineWar().findPath(chesses, board);
+    vector<int> result = SubmarineWar(maxStep, showLog, findShortest).findPath(chesses, board);
     if (result.empty())
     {
         cout << "Can't find a path." << endl;
     }
     else
     {
-        cout<<result.size();
+        cout << result.size() << " steps:";
         for (auto i : result)
         {
             switch (i)
@@ -107,22 +111,30 @@ void createQuestin(string s)
             }
         }
     }
-    cout<<endl;
+    cout << endl;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-
+    if (argc < 5)
+    {
+        cout << "Please set questionNumm maxStep, showLog, findShortest, for example SubmarineWar 1 100 0 1" << endl;
+        return 0;
+    }
+    int qeustionNum = stoi(argv[1]);
+    int maxStep = stoi(argv[2]);
+    int showLog = stoi(argv[3]);
+    int findShortest = stoi(argv[4]);
     ifstream in("questions.txt");
     string filename;
     string line;
 
     if (in)
     {
-        while (getline(in, line))
+        while (qeustionNum > 0 && getline(in, line))
         {
-            // cout << line << endl;
-            createQuestin(line);
+            qeustionNum--;
+            createQuestin(line, maxStep, showLog, findShortest);
         }
     }
 }
