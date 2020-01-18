@@ -1,28 +1,128 @@
-#include "chess.cpp"
-int main(int argc, char **argv)
+#include "submarineWar.cpp"
+#include <unordered_map>
+#include <fstream>
+#include <string>
+#include <iostream>
+using namespace std;
+
+void createQuestin(string s)
 {
-    vector<vector<Chess>> chesses(3, vector<Chess>(3));
+    if (s.size() == 0)
+        return;
+    int index = 0, x = 0, y = 0;
+    vector<vector<Chess *>> chesses(3, vector<Chess *>(3));
     vector<vector<int>> board(19, vector<int>(19, 0));
-    chesses[0][0] = SmallMineChess(vector<POSITION>(1, LEFT_TOP));
-    chesses[0][1] = MiddleMineChess(RIGHT_BORDER);
-    chesses[0][2] = SmallMineChess(vector<POSITION>(1, RIGHT_TOP));
-    POSITION small1[] = {LEFT_BOTTOM, RIGHT_BOTTOM};
-    chesses[1][0] = SmallMineChess(vector<POSITION>(small1, small1 + sizeof(small1) / sizeof(POSITION)));
-    POSITION small2[] = {LEFT_TOP, RIGHT_BOTTOM};
-    chesses[1][1] = SmallMineChess(vector<POSITION>(small2, small2 + sizeof(small2) / sizeof(POSITION)));
-    chesses[1][2] = SubMarine();
-    chesses[2][0] = SmallMineChess(vector<POSITION>(1, LEFT_BOTTOM));
-    chesses[2][1] = EmptyChess();
-    chesses[2][1] = BigMineChess(RIGHT_BOTTOM);
+
+    while (index < s.size())
+    {
+        // cout<<"Add chesses:"<<s[index]<<endl;
+        switch (s[index])
+        {
+        case 'T':
+            // cout << "Create submarine." << endl;
+            chesses[x][y] = new SubMarine();
+            index += 2;
+            break;
+        case 'E':
+            index += 2;
+            break;
+        case 'S':
+        {
+            vector<POSITION> mines;
+            index++;
+
+            while (index < s.size() && s[index] != ',')
+            {
+                mines.push_back(POSITION(s[index] - '0'));
+                index++;
+            }
+            index++;
+            // cout << "Create SmallMineChess. " << mines.size() << endl;
+            chesses[x][y] = new SmallMineChess(mines);
+        }
+        break;
+        case 'M':
+            index++;
+            // cout << "Create MiddleMineChess." << endl;
+
+            chesses[x][y] = new MiddleMineChess(POSITION(s[index] - '0'));
+            index += 2;
+            break;
+        case 'B':
+            index++;
+            // cout << "Create BigMineChess." << endl;
+
+            chesses[x][y] = new BigMineChess(POSITION(s[index] - '0'));
+            index += 2;
+            break;
+        default:
+            cout << "default" << endl;
+        }
+
+        y++;
+        if (y > 2)
+        {
+            x++;
+            y = 0;
+        }
+    }
+
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
-            if (!chesses[i][j].addToBoard(board, {2 + j * 5, 2 + i * 5}))
+            // cout << chesses[i][j]->chessType() << endl;
+            // printBoard(board);
+            if (chesses[i][j] && !chesses[i][j]->addToBoard(board, {2 + i * 5, 2 + j * 5},{0,0}))
             {
                 cout << "Add chess faild:" << i << "  " << j << endl;
+                return;
             }
         }
     }
-    cout<<"Add chesses succeed."<<endl;
+    // cout << "Add chesses succeed." << endl;
+    vector<int> result = SubmarineWar().findPath(chesses, board);
+    if (result.empty())
+    {
+        cout << "Can't find a path." << endl;
+    }
+    else
+    {
+        cout<<result.size();
+        for (auto i : result)
+        {
+            switch (i)
+            {
+            case 0:
+                cout << " ← ";
+                break;
+            case 1:
+                cout << " ↑ ";
+                break;
+            case 2:
+                cout << " ↓ ";
+                break;
+            default:
+                cout << " → ";
+            }
+        }
+    }
+    cout<<endl;
+}
+
+int main()
+{
+
+    ifstream in("questions.txt");
+    string filename;
+    string line;
+
+    if (in)
+    {
+        while (getline(in, line))
+        {
+            // cout << line << endl;
+            createQuestin(line);
+        }
+    }
 }

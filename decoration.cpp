@@ -5,25 +5,106 @@ public:
     Decoration(int width, int height) : BaseObject(width, height)
     {
     }
-    ~Decoration() {}
+    virtual ~Decoration() {}
 
-    bool addToBoard(vector<vector<int> > &board, Point position)
+    bool canMove(vector<vector<int>> &board, DERIECTION deriction)
     {
-        BaseObject::addToBoard(board, position);
-        for (int i = leftTop.x; i < width; i++)
+        // cout << "canMove:" << deriction << "  leftop.x:" << leftTop.x << "  y:" << leftTop.y << endl;
+        for (int move = 1; move <= 5; move++)
         {
-            for (int j = leftTop.y; j < height; j++)
+            // cout << "Move:" << move << endl;
+            switch (deriction)
             {
-                if (board[i][j] == DECORATION)
+            case UP:
+                // cout << "Check up" << endl;
+                for (int i = leftTop.x, j = leftTop.y; j < leftTop.y + width; j++)
+                {
+                    if (i - move < 0 || board[i - move][j] == DECORATION)
+                    {
+                        return false;
+                    }
+                }
+                break;
+            case DOWN:
+                // cout << "Check Down" << endl;
+
+                for (int i = leftTop.x + height - 1, j = leftTop.y; j < leftTop.y + width; j++)
+                {
+                    if (i + move >= 19 || board[i + move][j] == DECORATION)
+                    {
+                        return false;
+                    }
+                }
+                break;
+            case LEFT:
+                // cout << "Check Left" << endl;
+
+                for (int i = leftTop.x, j = leftTop.y; i < leftTop.x + height; i++)
+                {
+                    if (j - move < 0 || board[i][j - move] == DECORATION)
+                    {
+                        return false;
+                    }
+                }
+                break;
+            case RIGHT:
+                // cout << "Check Right" << endl;
+
+                for (int i = leftTop.x, j = leftTop.y + width - 1; i < leftTop.x + height; i++)
+                {
+                    // cout << i << "==== " << j + move << " ==== " << board[i][j + move] << endl;
+                    if (j + move >= 19 || board[i][j + move] == DECORATION)
+                    {
+                        return false;
+                    }
+                }
+                break;
+            }
+        }
+        return true;
+    }
+
+    virtual bool removeFromBoard(vector<vector<int>> &board) override
+    {
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                int x = leftTop.x + i;
+                int y = leftTop.y + j;
+                if (board[x][y] == DECORATION)
+                {
+                    board[x][y] = NONE;
+                }
+            }
+        }
+        return true;
+    }
+
+    virtual bool addToBoard(vector<vector<int>> &board, Point position, Point parentPosition) override
+    {
+        BaseObject::addToBoard(board, position, parentPosition);
+        // cout << "decoration add to board, leftTop.x:" << leftTop.x << "  y:" << leftTop.y << "  width:" << width << "  height:" << height << endl;
+        if (position.x < 0 || position.x > 19 || position.y < 0 || position.y > 19)
+        {
+            return false;
+        }
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                int x = leftTop.x + i;
+                int y = leftTop.y + j;
+                if (board[x][y] == DECORATION)
                 {
                     //Confilct with other decoration
-                    cout<<"board i:"<<i<<" j:"<<j<<" is ocupied by DECORATION"<<endl;
+                    cout << "board x:" << x << " y:" << y << " is ocupied by DECORATION" << endl;
                     valid = false;
                     return false;
                 }
                 else
                 {
-                    board[i][j] = DECORATION;
+                    board[x][y] = DECORATION;
                 }
             }
         }
@@ -68,4 +149,12 @@ public:
     {
     }
     ~Propeller() {}
+};
+class Clip : public Decoration
+{
+public:
+    Clip() : Decoration(1, 1)
+    {
+    }
+    ~Clip() {}
 };
