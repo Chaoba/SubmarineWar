@@ -94,7 +94,7 @@ private:
         {
             if ((!path.empty() && path.back() == i))
             {
-                //The deriection comes from.
+                //The deriection last step comes from.
                 continue;
             }
             int nextX = x + moveDeriction[i].first;
@@ -107,6 +107,8 @@ private:
             {
                 cout << "dfs find x:" << x << " y:" << y << "  nextX:" << nextX << "  nextY:" << nextY << "deriection:" << 3 - i << endl;
             }
+
+            //1. Find a valid movable deriction.
             if (chesses[nextX][nextY]->canMove(board, DERIECTION(3 - i))) //Move to the current empty position.
             {
                 if (showLog)
@@ -114,21 +116,19 @@ private:
                     cout << "can move:" << 3 - i << endl;
                     printBoard(board);
                 }
-
+                //2. Save the path.
                 path.push_back(3 - i);
 
-                //1. Firstly remove this chess from board.
+                //3. Remove this chess from board.
                 chesses[nextX][nextY]->removeFromBoard(board);
-                // printBoard(board);
-                //2. Move this chess in chess array.
+                //4. Move this chess in chess array.
                 chesses[x][y] = chesses[nextX][nextY];
                 chesses[nextX][nextY] = nullptr;
 
-                //3. Add this chess to the board with the target position.
+                //5. Add this chess to the board with the target position.
                 if (!chesses[x][y]->addToBoard(board, {2 + x * 5, 2 + y * 5}))
                 {
                     cout << "add to board failed" << endl;
-
                     return false;
                 }
 
@@ -154,7 +154,7 @@ private:
                     }
                 }
 
-                //4. Do dfs search.(nextX, nextY) shoule be empty chess.
+                //6. Do dfs search.(nextX, nextY) shoule be empty chess.
                 if (dfsFind(chesses, board, path, minPath, nextX, nextY))
                 {
                     //find a path
@@ -164,13 +164,13 @@ private:
                     }
                 }
 
-                //5. Revert chess position
+                //7. Revert chess position
                 chesses[x][y]->removeFromBoard(board);
                 chesses[nextX][nextY] = chesses[x][y];
                 chesses[x][y] = nullptr;
                 if (!chesses[nextX][nextY]->addToBoard(board, {2 + nextX * 5, 2 + nextY * 5}))
                 {
-                    cout << "add to board failed1" << endl;
+                    cout << "add to board failed" << endl;
                     return false;
                 }
 
