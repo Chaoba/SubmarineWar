@@ -1,5 +1,6 @@
 # SubmarineWar
 Source codes for submarineWar, which is an interesting chess game.
+![](submarinewar.jpeg)
 
 How to run:
 
@@ -9,4 +10,3 @@ How to run:
 
 You can also add more questions in `questions.txt`
 
-![](submarineWar.jpeg)
