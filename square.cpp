@@ -1,13 +1,12 @@
 #include <vector>
 #include <iostream>
 using namespace std;
+
 class Point
 {
 public:
     int x, y;
-    Point(int i, int j) : x(i), y(j)
-    {
-    }
+    Point(int i, int j) : x(i), y(j) {}
     ~Point() {}
     Point operator+(const Point &b)
     {
@@ -33,6 +32,7 @@ enum POSITION
     RIGHT_BORDER = 6,
     BOTTOM_BORDER = 7,
 };
+
 enum DERIECTION
 {
     LEFT = 0,
@@ -40,6 +40,7 @@ enum DERIECTION
     DOWN = 2,
     RIGHT = 3,
 };
+
 enum CHESS_TYPE
 {
     SUB_MARINE = 6,
@@ -47,20 +48,20 @@ enum CHESS_TYPE
     MIDDLE_MINE = 8,
     BIG_MINE = 9
 };
+
 class Square
 {
 public:
     int width, height;
-    Point leftTop, parent;
+    Point leftTop;
     bool valid = false;
-    Square(int w, int h) : leftTop(Point(-1, -1)), parent(Point(-1, -1)), width(w), height(h)
-    {
-    }
-    virtual bool addToBoard(vector<vector<int>> &board, Point position, Point parentPosition)
+
+    Square(int w, int h) : leftTop(Point(-1, -1)), width(w), height(h){}
+
+    virtual bool addToBoard(vector<vector<int>> &board, Point position)
     {
         // cout<<"Add to baord: "<<position.x<<"  "<<position.y<<endl;
         leftTop = position;
-        parent = parentPosition;
         return true;
     }
     virtual bool removeFromBoard(vector<vector<int>> &board) = 0;

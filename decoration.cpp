@@ -2,9 +2,8 @@
 class Decoration : public Square
 {
 public:
-    Decoration(int width, int height) : Square(width, height)
-    {
-    }
+    Decoration(int width, int height) : Square(width, height){}
+
     virtual ~Decoration() {}
 
     bool canMove(vector<vector<int>> &board, DERIECTION deriction)
@@ -81,9 +80,9 @@ public:
         return true;
     }
 
-    virtual bool addToBoard(vector<vector<int>> &board, Point position, Point parentPosition) override
+    virtual bool addToBoard(vector<vector<int>> &board, Point position) override
     {
-        Square::addToBoard(board, position, parentPosition);
+        Square::addToBoard(board, position);
         // cout << "decoration add to board, leftTop.x:" << leftTop.x << "  y:" << leftTop.y << "  width:" << width << "  height:" << height << endl;
         if (position.x < 0 || position.x > 19 || position.y < 0 || position.y > 19)
         {
@@ -150,6 +149,7 @@ public:
     }
     ~Propeller() {}
 };
+
 class Clip : public Decoration
 {
 public:

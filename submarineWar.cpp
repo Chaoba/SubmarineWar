@@ -45,10 +45,16 @@ public:
 
     vector<int> findPath(vector<vector<Chess *>> &chesses, vector<vector<int>> &board)
     {
+        if(chesses.size() != 3 || chesses[0].size() != 3 || board.size() != 19 || board[0].size() != 19) {
+            cout<<"chesses or board size error!"<<endl;
+            return {};
+        }
+
         if (showLog)
         {
             printBoard(board);
         }
+
         vector<int> path;
         vector<int> minPath;
         for (int i = 0; i < 3; i++)
@@ -119,7 +125,7 @@ private:
                 chesses[nextX][nextY] = nullptr;
 
                 //3. Add this chess to the board with the target position.
-                if (!chesses[x][y]->addToBoard(board, {2 + x * 5, 2 + y * 5}, {0, 0}))
+                if (!chesses[x][y]->addToBoard(board, {2 + x * 5, 2 + y * 5}))
                 {
                     cout << "add to board failed" << endl;
 
@@ -162,13 +168,11 @@ private:
                 chesses[x][y]->removeFromBoard(board);
                 chesses[nextX][nextY] = chesses[x][y];
                 chesses[x][y] = nullptr;
-                if (!chesses[nextX][nextY]->addToBoard(board, {2 + nextX * 5, 2 + nextY * 5}, {0, 0}))
+                if (!chesses[nextX][nextY]->addToBoard(board, {2 + nextX * 5, 2 + nextY * 5}))
                 {
                     cout << "add to board failed1" << endl;
                     return false;
                 }
-                // cout << "revert:" << endl;
-                // printBoard(board);
 
                 path.pop_back();
             }

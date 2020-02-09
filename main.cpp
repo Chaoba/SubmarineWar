@@ -77,7 +77,7 @@ void createQuestin(string s, int maxStep, int showLog, int findShortest)
         {
             // cout << chesses[i][j]->chessType() << endl;
             // printBoard(board);
-            if (chesses[i][j] && !chesses[i][j]->addToBoard(board, {2 + i * 5, 2 + j * 5}, {0, 0}))
+            if (chesses[i][j] && !chesses[i][j]->addToBoard(board, {2 + i * 5, 2 + j * 5}))
             {
                 cout << "Add chess faild:" << i << "  " << j << endl;
                 return;

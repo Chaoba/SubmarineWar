@@ -4,14 +4,15 @@ class Chess : public Square
 {
 public:
     vector<pair<Decoration *, Point>> decorations;
-    Chess() : Square(5, 5)
-    {
-    }
+    Chess() : Square(5, 5) {}
+
     virtual CHESS_TYPE chessType() = 0;
+
     bool sameRow(Point &a, Point &b)
     {
         return a.x == b.x;
     }
+
     bool sameCol(Point &a, Point &b)
     {
         return a.y == b.y;
@@ -85,6 +86,7 @@ public:
         }
         return (front->canMove(board, deriction) && back->canMove(board, deriction));
     }
+
     virtual bool removeFromBoard(vector<vector<int>> &board) override
     {
         for (int i = 0; i < height; i++)
@@ -107,9 +109,10 @@ public:
         }
         return true;
     }
-    virtual bool addToBoard(vector<vector<int>> &board, Point position, Point parentPosition) override
+
+    virtual bool addToBoard(vector<vector<int>> &board, Point position) override
     {
-        Square::addToBoard(board, position, parentPosition);
+        Square::addToBoard(board, position);
         // cout << chessType() << "chess add to board" << endl;
         if (position.x < 0 || position.x > 19 || position.y < 0 || position.y > 19)
         {
@@ -143,7 +146,7 @@ public:
         //Add chess decorations.
         for (auto decoration : decorations)
         {
-            if (!decoration.first->addToBoard(board, position + decoration.second, position))
+            if (!decoration.first->addToBoard(board, position + decoration.second))
             {
                 cout << "add decoration failed" << endl;
                 valid = false;
@@ -152,6 +155,7 @@ public:
         }
         return true;
     }
+
     virtual ~Chess()
     {
         for (auto decoration : decorations)
@@ -211,6 +215,7 @@ public:
             }
         }
     }
+
     ~SmallMineChess() {}
     CHESS_TYPE chessType() override
     {
@@ -240,7 +245,7 @@ public:
             decorations.push_back({new MiddleMine(true), {-1, 1}});
             break;
         case RIGHT_BORDER:
-            decorations.push_back({new MiddleMine(), {1, +width - 1}});
+            decorations.push_back({new MiddleMine(), {1, width - 1}});
             break;
         case BOTTOM_BORDER:
             decorations.push_back({new MiddleMine(true), {height - 1, 1}});
